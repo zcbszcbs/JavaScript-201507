@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+       #div1 {
+           width:100px;
+           height:100px;
+           background: #ff0000;
+           border: 1px solid #0000ff;
+           position: absolute;
+           left:50px;
+           top:0px;
+           opacity: 1;
+           /*filter:alpha(opacity=50);*/
+       }
+    </style>
+</head>
+<body>
+<div id="div1"></div>
+</body>
+</html>
+<script type="text/javascript">
+    function getCss(ele,attr){
+        if(window.getComputedStyle){
+            return parseFloat(window.getComputedStyle(ele,null)[attr]);
+        }
+        else{
+            if(attr == "opacity"){
+                var val = ele.currentStyle.filter;
+                var reg = /alpha\(opacity=\d+\)/;
+                if(reg.test(val)){
+                    return RegExp.$1 / 100;
+                }
+                else{
+                    return 1;
+                }
+            }
+            else{
+                return parseFloat(ele.currentStyle[attr]);
+            }
+        }
+    }
+
+    function setCss(ele,attr,val){
+        switch(attr){
+            case "width":
+            case "height":
+            case "left":
+            case "top":
+                ele.style[attr] = val + "px";
+                break;
+            case "opacity":
+                ele.style.opacity = val;
+                ele.style.filter = "alpha(opacity="+ val*100 +")";
+                break;
+            default:
+                ele.style[attr] = val;
+        }
+    }
+
+//    function animate(ele,attr,target,duration){
+//        var begin = getCss(ele,attr);
+//        var change = target - begin;
+//        var times = 0;
+//        var interval = 15;
+//
+//        //window.clearTimerout(timer);
+//        function step(){
+//            times += interval;
+//            if(times < duration){
+//                ele.style[attr] = times / duration * change + begin + "px";
+//            }
+//            else{
+//                ele.style[attr] = target + "px";
+//                window.clearTimeout(timer);
+//            }
+//        }
+//
+//        timer = window.setInterval(step,interval);
+//    }
+
+    function animate(ele,oTarget,duration){
+        var oBegin = {};
+        var oChange = {};
+        for(attr in oTarget){
+            var begin = getCss(ele,attr);
+            var change = oTarget[attr] - begin;
+            oBegin[attr] = begin;
+            oChange[attr] = change;
+        }
+        var times = 0;
+        var interval = 15;
+
+        clearTimeout(timer);
+        function step(){
+            times += interval;
+            if(times < duration) {
+                for (attr in oChange) {
+                    var begin = oBegin[attr];
+                    var change = oChange[attr];
+                    var val = times / duration * change + begin;
+                    setCss(ele, attr,val);
+                }
+            }
+            else{
+                for(attr in oTarget){
+                    setCss(ele,attr,oTarget[attr]);
+                }
+                window.clearTimeout(timer);
+            }
+        }
+        timer = window.setInterval(step,interval);
+    }
+
+    var timer = null;
+    div1.onclick = function(){
+        //animate(div1,"left",1000,900)
+        var oTarget = {width:500,height:500,left:900,opacity:0.1}
+        animate(div1,oTarget,900)
+    }
+</script>

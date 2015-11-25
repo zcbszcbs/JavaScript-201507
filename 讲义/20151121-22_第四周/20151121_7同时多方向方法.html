@@ -35,11 +35,11 @@ function getCss(ele,attr){
 }
 function setCss(ele,attr,val){
 	switch(attr){
+        case "width":
 		case "height":
-		case "width":
 		case "left":
 		case "top":
-			ele.style[attr]=val+"px";
+			ele.style[attr]=val+"px";  //width/height/left/top 都执行这步
 			break;
 		case "opacity":
 			ele.style.opacity=val;
@@ -90,7 +90,7 @@ function animate(ele,oTarget,duration,callback){
 	ele.timer=window.setInterval(step,interval);
 }
 var obj={width:500,height:400,top:444,left:0,opacity:0.2}
-var obj={left:0}
+//var obj={left:0}
 div1.onclick=function(){
 	animate(this,obj,1000);	
 }

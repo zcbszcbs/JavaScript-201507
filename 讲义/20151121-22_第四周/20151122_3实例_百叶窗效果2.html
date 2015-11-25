@@ -60,6 +60,7 @@ document.documentElement.onclick=function(){
 		//animate(ele,{left:ele.l,top:ele.t},2700,3);
 		;(function(ele){
 			window.setTimeout(function(){
+                console.log('left='+ele.l+' top='+ele.t);
 				animate(ele,{left:ele.l,top:ele.t},1000,2);	
 			},i%cols*200);	
 		})(ele);
